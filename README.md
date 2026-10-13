@@ -42,3 +42,9 @@ python3 build_offline.py
 ## 验证
 
 已验证绘图统计与撤销、图片转换、52×52 PNG 豆位和原始 RGB 色，以及施工图编号与用量一致。
+
+## MARD 用色选项
+
+在左侧“用色体系”选择 MARD，现有豆位、图片转换和画笔均吸附到内置 205 色。图纸、编号表和 CSV 使用 MARD 品牌编号；自由 RGB 仍为默认。切换记录在撤销历史与项目 JSON 中。匹配采用 Lab 色差，不添加抖动。RGB 是屏幕参考值，不代表实物测色。
+
+色号数据来自本地 pindou-pattern skill 的 `scripts/colorData.js`（205 色版本）；非官方实时全系列目录。
