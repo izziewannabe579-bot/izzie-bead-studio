@@ -3,7 +3,7 @@
 (function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.PortraitTransfer=factory();})(typeof globalThis!=='undefined'?globalThis:this,function(){
  const clone=value=>value==null?null:JSON.parse(JSON.stringify(value));
  function grid(pixels,w,h){
-  if(!Number.isInteger(w)||!Number.isInteger(h)||w<4||h<4||w>104||h>104||!Array.isArray(pixels)||pixels.length!==w*h)throw Error('图纸尺寸或豆位数量无效');
+  if(!Number.isInteger(w)||!Number.isInteger(h)||w<4||h<4||w>416||h>416||!Array.isArray(pixels)||pixels.length!==w*h)throw Error('图纸尺寸或豆位数量无效');
   return pixels.map(c=>{if(c===null)return null;if(typeof c!=='string'||!/^#[0-9a-f]{6}$/i.test(c))throw Error('豆位颜色无效');return c.toLowerCase();});
  }
  function create(w,h,raw,smoothed,{origin='image',features='',smoothedApplied=true}={}){

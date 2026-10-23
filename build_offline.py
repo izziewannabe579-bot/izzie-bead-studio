@@ -1,7 +1,7 @@
 from pathlib import Path
 root = Path(__file__).resolve().parent
 html = (root / "index.html").read_text(encoding="utf-8")
-for name in ["portrait-transfer.js", "app.js"]:
+for name in ["board-grid.js", "board-export.js", "portrait-transfer.js", "app.js"]:
     js = (root / name).read_text(encoding="utf-8")
     if "</script" in js.lower():
         raise ValueError("Unsafe inline script content")
