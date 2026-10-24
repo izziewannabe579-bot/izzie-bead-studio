@@ -6,10 +6,10 @@
   if(!Number.isInteger(w)||!Number.isInteger(h)||w<4||h<4||w>416||h>416||!Array.isArray(pixels)||pixels.length!==w*h)throw Error('图纸尺寸或豆位数量无效');
   return pixels.map(c=>{if(c===null)return null;if(typeof c!=='string'||!/^#[0-9a-f]{6}$/i.test(c))throw Error('豆位颜色无效');return c.toLowerCase();});
  }
- function create(w,h,raw,smoothed,{origin='image',features='',smoothedApplied=true}={}){
+ function create(w,h,raw,smoothed,{origin='image',features='',smoothedApplied=true,kind='pet'}={}){
   raw=grid(raw,w,h);smoothed=grid(smoothed,w,h);
   if(raw.some((c,i)=>(c===null)!==(smoothed[i]===null)))throw Error('减杂色版改变了透明轮廓');
-  return {version:1,w,h,origin:origin==='image'?'image':'current',raw,smoothed,smoothedApplied:!!smoothedApplied,features:String(features).slice(0,500),protected:[],annotations:{},lockShape:true,lockDetails:true};
+  return {version:1,w,h,kind:['general','artwork','album','cartoon','pet'].includes(kind)?kind:'pet',origin:origin==='image'?'image':'current',raw,smoothed,smoothedApplied:!!smoothedApplied,features:String(features).slice(0,500),protected:[],annotations:{},lockShape:true,lockDetails:true};
  }
  function normalize(value,w,h){
   if(value==null)return null;
@@ -28,7 +28,8 @@
   const w=s.w??s.gridSize,h=s.h??s.gridSize,pixels=grid(s.data??s.pixelData,w,h);
   const t=normalize(s.transfer,w,h);
   if(t?.lockShape&&pixels.some((c,i)=>(c===null)!==(t.raw[i]===null)))throw Error('锁定轮廓与当前豆位不一致');
-  return {w,h,data:pixels,title:typeof s.title==='string'?s.title.slice(0,180):typeof s.source==='string'?s.source.replace(/\.[^.]+$/,''):'未命名作品',colorSystem:s.colorSystem==='mard'?'mard':'rgb',transfer:t};
+  const saved=s.importOptions||{},importOptions={kind:['general','artwork','album','cartoon','pet'].includes(saved.kind)?saved.kind:t?.kind||'general',fit:saved.fit==='cover'?'cover':'contain',sampling:['nearest','area'].includes(saved.sampling)?saved.sampling:'auto'};
+  return {w,h,data:pixels,title:typeof s.title==='string'?s.title.slice(0,180):typeof s.source==='string'?s.source.replace(/\.[^.]+$/,''):'未命名作品',colorSystem:s.colorSystem==='mard'?'mard':'rgb',transfer:t,importOptions};
  }
  function canWrite(t,index,value){return !t||(!(t.lockShape&&(t.raw[index]===null)!==(value===null))&&!(t.lockDetails&&t.protected.includes(index)));}
  function write(pixels,t,index,value,annotation){
